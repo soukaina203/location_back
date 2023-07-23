@@ -19,7 +19,8 @@ use App\Http\Controllers\ReviewController;
 */
 Route::post('/signUp', [userController::class, 'signup']);
 Route::post('/login', [userController::class, 'login']);
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+Route::group(['middleware' => ['auth:sanctum']], function () {
+
 
     Route::resources([
         'rental' => rentalController ::class,
