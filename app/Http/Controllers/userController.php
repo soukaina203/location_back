@@ -22,12 +22,17 @@ class userController extends Controller
 
         ]);
         $user->save();
+        return response()->json([
+            'msg' => "great"
+
+
+        ]);
 
     }
 
     public function login(Request $request)
     {
-        $request->validated($request->all());
+        // $request->validated($request->all());
 
         $user = User::where('email', $request->email)->first();
         if($user && Hash::check($request->password, $user->password)){
@@ -66,6 +71,7 @@ class userController extends Controller
             "password" => $request->input('password'),
             "address" => $request->input('address'),
             "phone" => $request->input('phone'),
+            "photo" => $request->input('photo'),
         ]);
         $User->save();
         return response()->json([
@@ -107,6 +113,7 @@ class userController extends Controller
         $User->password = $request->input('password');
         $User->address = $request->input('address');
         $User->phone = $request->input('phone');
+        $User->photo = $request->input('photo');
 
         $User->update();
         $User->save();

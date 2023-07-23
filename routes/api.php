@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\rentalController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\carController;
+use App\Http\Controllers\ReviewController;
 
 /*
 |--------------------------------------------------------------------------
@@ -24,6 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
         'rental' => rentalController ::class,
         'user' => userController ::class,
         'car' => carController::class,
+        'review' => ReviewController::class,
 
     ]);
 
@@ -31,4 +33,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 });
 Route::get('topCars',[carController::class,'BestDeals']);
+Route::get('reviews/get',[ReviewController::class,'index']);
 
