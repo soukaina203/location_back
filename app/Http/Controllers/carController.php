@@ -31,6 +31,7 @@ class carController extends Controller
         $car = new Car([
             "model" => $request->input('model'),
             "make" => $request->input('make'),
+            'photo'=>$request->input('photo'),
             "year" => $request->input('year'),
             "color" => $request->input('color'),
             "price_per_day" => $request->input('price_per_day'),
@@ -74,6 +75,7 @@ class carController extends Controller
         $car->model = $request->input('model');
         $car->make = $request->input('make');
         $car->year = $request->input('year');
+        $car->photo=$request->input('photo');
         $car->color = $request->input('color');
         $car->price_per_day = $request->input('price_per_day');
         $car->available = $request->input('available');
