@@ -5,9 +5,46 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rental;
+use Illuminate\Support\Facades\Hash;
 
 class userController extends Controller
 {
+    public function signup(Request $request)
+    {
+
+        $user = new User([
+            "name" => $request->name,
+            "email" => $request->email,
+            "password" =>  Hash::make($request->password),
+            "address" => $request->address,
+            "phone" => $request->phone,
+
+
+        ]);
+        $user->save();
+
+    }
+
+    public function login(Request $request)
+    {
+        $request->validated($request->all());
+
+        $user = User::where('email', $request->email)->first();
+        if($user && Hash::check($request->password, $user->password)){
+            $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
+            return response()->json([
+                'token' => $token,
+                'status' => 'success',
+                'message' => 'Login successful',
+                'user' => $user
+            ]);
+        } else {
+            return response()->json([
+                'status' => $user,
+
+            ]);
+        }
+    }
     /**
      * Display a listing of the resource.
      */

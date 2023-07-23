@@ -106,4 +106,10 @@ class carController extends Controller
         }
         // }
     }
+    public function BestDeals(){
+        $topCars=Car::orderByDesc('nbrRentals')->limit(3)->get();
+        return response()->json([
+            'topCars' => $topCars
+        ]);
+    }
 }

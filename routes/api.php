@@ -16,7 +16,8 @@ use App\Http\Controllers\carController;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
-
+Route::post('/signUp', [userController::class, 'signup']);
+Route::post('/login', [userController::class, 'login']);
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
     Route::resources([
@@ -28,6 +29,6 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 
-
 });
+Route::get('topCars',[carController::class,'BestDeals']);
 
