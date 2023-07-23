@@ -107,7 +107,7 @@ class carController extends Controller
     public function destroy(string $id)
     {
         $car = Car::findOrFail($id);
-        $rental = Rental::where('client_id', $car->id)->get();
+        $rental = Rental::where('car_id', $car->id)->get();
         if ($rental->isEmpty()) {
 
             $car->delete();
