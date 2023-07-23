@@ -30,6 +30,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     ]);
 
+    Route::get('filterType',[carController::class,'getDistinctTypes']);
 
 
 });

@@ -11,8 +11,18 @@ class carController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function getDistinctTypes()
+    {
+        $carsByType = Car::orderBy('type')->get()->groupBy('type');
+
+
+        return  response()->json($carsByType);
+    }
     public function index()
     {
+        $distinctTypes = Car::distinct()->pluck('type');
+        $carsByType = Car::orderBy('type')->get()->groupBy('type');
+
         $all = Car::all();
         $cars = [];
         for ($i = 0; $i < count($all); $i++) {
@@ -20,7 +30,11 @@ class carController extends Controller
                 array_push($cars, $all[$i]);
             }
         }
-        return response()->json($cars);
+        return response()->json([
+            'cars'=>$cars,
+            'Type'=>$distinctTypes,
+            'groupes'=>$carsByType
+        ]);
     }
 
     /**
@@ -31,7 +45,7 @@ class carController extends Controller
         $car = new Car([
             "model" => $request->input('model'),
             "make" => $request->input('make'),
-            'photo'=>$request->input('photo'),
+            'photo' => $request->input('photo'),
             "year" => $request->input('year'),
             "color" => $request->input('color'),
             "price_per_day" => $request->input('price_per_day'),
@@ -75,7 +89,7 @@ class carController extends Controller
         $car->model = $request->input('model');
         $car->make = $request->input('make');
         $car->year = $request->input('year');
-        $car->photo=$request->input('photo');
+        $car->photo = $request->input('photo');
         $car->color = $request->input('color');
         $car->price_per_day = $request->input('price_per_day');
         $car->available = $request->input('available');
@@ -108,8 +122,9 @@ class carController extends Controller
         }
         // }
     }
-    public function BestDeals(){
-        $topCars=Car::orderByDesc('nbrRentals')->limit(3)->get();
+    public function BestDeals()
+    {
+        $topCars = Car::orderByDesc('nbrRentals')->limit(3)->get();
         return response()->json([
             'topCars' => $topCars
         ]);
