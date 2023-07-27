@@ -11,29 +11,50 @@ class carController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function getDistinctTypes()
+    public function uploadImgs(Request $request,string $id )
     {
-        $carsByType = Car::orderBy('type')->get()->groupBy('type');
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
+        ]);
+        // return response()->json(['img'=> $request->file('image')]);
+        if ($request->hasFile('image')) {
+            $image=$request->file('image');
+            $name=time() .'.'.$image->getClientOriginalExtension();
+            $image->move('images/',$name);
+            // $path = $request->file('image')->store('public/images');
+            $car=Car::findOrFail($id);
+            $car->photo=$name;
+            $car->update();
+            return ['image_url' => $name];
+        }
 
-
-        return  response()->json($carsByType);
+        return response()->json(['message' => 'No image uploaded.'], 400);
     }
     public function index()
     {
-        $distinctTypes = Car::distinct()->pluck('type');
-        $carsByType = Car::orderBy('type')->get()->groupBy('type');
-
+        // for users
         $all = Car::all();
         $cars = [];
+
         for ($i = 0; $i < count($all); $i++) {
             if ($all[$i]->available === 1) {
                 array_push($cars, $all[$i]);
             }
         }
+        return  response()->json($cars);
+    }
+    public function carsForAdmin()
+    {
+        // for admin
+        $distinctTypes = Car::distinct()->pluck('type');
+        $carsByType = Car::orderBy('type')->get()->groupBy('type');
+
+        $all = Car::all();
+
         return response()->json([
-            'cars'=>$cars,
-            'Type'=>$distinctTypes,
-            'groupes'=>$carsByType
+            'cars' => $all,
+            'Type' => $distinctTypes,
+            'groupes' => $carsByType
         ]);
     }
 
@@ -71,13 +92,7 @@ class carController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $car = Car::findOrFail($id);
-        return response()->json([
-            'car' => $car
-        ]);
-    }
+
 
     /**
      * Update the specified resource in storage.
@@ -89,7 +104,7 @@ class carController extends Controller
         $car->model = $request->input('model');
         $car->make = $request->input('make');
         $car->year = $request->input('year');
-        $car->photo = $request->input('photo');
+        $car->type = $request->input('type');
         $car->color = $request->input('color');
         $car->price_per_day = $request->input('price_per_day');
         $car->available = $request->input('available');

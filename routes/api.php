@@ -31,6 +31,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     ]);
 
     Route::get('filterType',[carController::class,'getDistinctTypes']);
+    Route::get('carsForAdmin',[carController::class,'carsForAdmin']);
+    Route::post('car/uploadImg/{id}',[carController::class,'uploadImgs']);
 
 
 });
