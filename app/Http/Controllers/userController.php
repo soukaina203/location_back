@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rental;
+use App\Models\Review;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
@@ -41,8 +42,6 @@ class userController extends Controller
             // Handle the exception if something goes wrong during token deletion
             return response()->json('An error occurred while logging out', 500);
         }
-
-
     }
     public function login(Request $request)
     {
@@ -79,13 +78,16 @@ class userController extends Controller
      */
     public function store(Request $request)
     {
+        $image = $request->file('photo');
+        $name = time() . '.' . $image->getClientOriginalExtension();
+        $image->move('images/', $name);
         $User = new User([
             "name" => $request->input('name'),
             "email" => $request->input('email'),
             "password" => $request->input('password'),
             "address" => $request->input('address'),
             "phone" => $request->input('phone'),
-            "photo" => $request->input('photo'),
+            "photo" => $name,
         ]);
         $User->save();
         return response()->json([
@@ -144,7 +146,10 @@ class userController extends Controller
         $User = User::findOrFail($id);
         $rental = Rental::where('user_id', $User->id)->get();
         if ($rental->isEmpty()) {
-
+            $reviews = Review::where('user_id', $id)->get();
+            for ($i = 0; $i < count($reviews); $i++) {
+                $reviews[$i]->delete();
+            }
             $User->delete();
             return response()->json([
                 'msg' => "done"
