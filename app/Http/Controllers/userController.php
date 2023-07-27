@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Rental;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Hash;
 
 class userController extends Controller
@@ -27,15 +28,28 @@ class userController extends Controller
 
 
         ]);
+    }
+    public function logout()
+    {
+        try {
+            auth()->user()->tokens->each(function ($token, $key) {
+                $token->delete(); // delete the token from the database
+            });
+
+            return response()->json('Logged');
+        } catch (QueryException $e) {
+            // Handle the exception if something goes wrong during token deletion
+            return response()->json('An error occurred while logging out', 500);
+        }
+
 
     }
-
     public function login(Request $request)
     {
         // $request->validated($request->all());
 
         $user = User::where('email', $request->email)->first();
-        if($user && Hash::check($request->password, $user->password)){
+        if ($user && Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
             return response()->json([
                 'token' => $token,

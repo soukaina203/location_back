@@ -73,13 +73,16 @@ class carController extends Controller
         // for admin
         $distinctTypes = Car::distinct()->pluck('type');
         $carsByType = Car::orderBy('type')->get()->groupBy('type');
-
+        $available=Car::where('available',1)->get();
+        $NotAvailable=Car::where('available',0)->get();
         $all = Car::all();
 
         return response()->json([
             'cars' => $all,
             'Type' => $distinctTypes,
-            'groupes' => $carsByType
+            'groupes' => $carsByType,
+            'available'=> $available,
+            'NotAvailable'=>$NotAvailable
         ]);
     }
 
