@@ -25,7 +25,8 @@ class rentalController extends Controller
             "rental_start" => $request->input('rental_start'),
             "rental_end" => $request->input('rental_end'),
             "total_price" => $request->input('total_price'),
-            "location" => $request->input('location'),
+            "hourStart" => $request->input('hourStart'),
+            "hourFinish" => $request->input('hourFinish'),
         ]);
         $Rental->save();
         return response()->json([
@@ -67,7 +68,8 @@ class rentalController extends Controller
         $Rental->rental_start = $request->input('rental_start');
         $Rental->rental_end = $request->input('rental_end');
         $Rental->total_price = $request->input('total_price');
-        $Rental->location = $request->input('location');
+        $Rental->hourStart = $request->input('hourStart');
+        $Rental->hourFinish = $request->input('hourFinish');
 
         $Rental->update();
         $Rental->save();

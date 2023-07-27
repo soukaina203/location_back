@@ -101,21 +101,17 @@ class userController extends Controller
     public function show(string $id)
     {
         $User = User::findOrFail($id);
+        $rentals = Rental::where('user_id',$id)->with('car')->get();
         return response()->json([
-            'User' => $User
+            'User' => $User,
+            'rentals'=>$rentals
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $User = User::findOrFail($id);
-        return response()->json([
-            'User' => $User
-        ]);
-    }
+
 
     /**
      * Update the specified resource in storage.
