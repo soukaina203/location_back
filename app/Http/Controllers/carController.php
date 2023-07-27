@@ -11,24 +11,49 @@ class carController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function uploadImgs(Request $request,string $id )
+    public function uploadImgs(Request $request, string $id)
     {
         $request->validate([
             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
         ]);
         // return response()->json(['img'=> $request->file('image')]);
         if ($request->hasFile('image')) {
-            $image=$request->file('image');
-            $name=time() .'.'.$image->getClientOriginalExtension();
-            $image->move('images/',$name);
-            // $path = $request->file('image')->store('public/images');
-            $car=Car::findOrFail($id);
-            $car->photo=$name;
+            $image = $request->file('image');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $image->move('images/', $name);
+            $car = Car::findOrFail($id);
+            $car->photo = $name;
             $car->update();
             return ['image_url' => $name];
         }
 
         return response()->json(['message' => 'No image uploaded.'], 400);
+    }
+    public function store(Request $request)
+    {
+        $request->validate([
+            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
+        ]);
+        if ($request->hasFile('photo')) {
+            $image = $request->file('photo');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $image->move('images/', $name);
+            $car = new Car([
+                "model" => $request->input('model'),
+                "make" => $request->input('make'),
+                'photo' => $name,
+                "year" => $request->input('year'),
+                "color" => $request->input('color'),
+                "price_per_day" => $request->input('price_per_day'),
+                "available" => $request->input('available'),
+            ]);
+            $car->save();
+            return response()->json([
+                'message' => 'Item added successfully'
+            ]);
+        }else{
+            return "bad ";
+        }
     }
     public function index()
     {
@@ -61,22 +86,7 @@ class carController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
-    {
-        $car = new Car([
-            "model" => $request->input('model'),
-            "make" => $request->input('make'),
-            'photo' => $request->input('photo'),
-            "year" => $request->input('year'),
-            "color" => $request->input('color'),
-            "price_per_day" => $request->input('price_per_day'),
-            "available" => $request->input('available'),
-        ]);
-        $car->save();
-        return response()->json([
-            'message' => 'Item added successfully'
-        ]);
-    }
+
 
     /**
      * Display the specified resource.
