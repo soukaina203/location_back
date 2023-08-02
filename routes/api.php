@@ -29,7 +29,7 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
         'review' => ReviewController::class,
 
     ]);
-
+    Route::get('/select',[rentalController::class,'selecteData']);
     Route::get('filterType',[carController::class,'getDistinctTypes']);
     Route::get('carsForAdmin',[carController::class,'carsForAdmin']);
     Route::post('car/uploadImg/{id}',[carController::class,'uploadImgs']);

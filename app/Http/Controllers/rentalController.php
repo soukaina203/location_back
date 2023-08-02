@@ -2,11 +2,22 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Car;
 use Illuminate\Http\Request;
 use App\Models\Rental;
+use App\Models\User;
 
 class rentalController extends Controller
 {
+    public function selecteData(){
+        $users=User::all();
+        $cars=Car::all();
+        return response()->json([
+            'users'=>$users,
+            'cars'=>$cars
+
+        ]);
+    }
     public function index()
     {
         $all = Rental::with('car', 'user')->get();
@@ -39,8 +50,13 @@ class rentalController extends Controller
     public function show(string $id)
     {
         $Rental = Rental::with('car', 'user')->findOrFail($id);
+        $users=User::all();
+        $cars=Car::all();
         return response()->json([
-            'Rental' => $Rental
+            'Rental' => $Rental,
+            'Users'=>$users,
+            'Cars'=>$cars
+
         ]);
     }
 

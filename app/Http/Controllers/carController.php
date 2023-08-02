@@ -71,18 +71,34 @@ class carController extends Controller
     public function carsForAdmin()
     {
         // for admin
+        //distinct
         $distinctTypes = Car::distinct()->pluck('type');
+        $distinctColors= Car::distinct()->pluck('color');
+        $distinctModels= Car::distinct()->pluck('model');
+        $distinctYear= Car::distinct()->pluck('year');
+        // Groupes
         $carsByType = Car::orderBy('type')->get()->groupBy('type');
+        $carsByColor = Car::orderBy('color')->get()->groupBy('color');
+        $carsByModel = Car::orderBy('model')->get()->groupBy('model');
+        $carsByYear = Car::orderBy('year')->get()->groupBy('year');
         $available=Car::where('available',1)->get();
         $NotAvailable=Car::where('available',0)->get();
         $all = Car::all();
 
         return response()->json([
             'cars' => $all,
-            'Type' => $distinctTypes,
-            'groupes' => $carsByType,
+            'distinctTypes' => $distinctTypes,
+            'distinctColors'=>$distinctColors,
+            'distinctModels'=>$distinctModels,
+            'distinctYear'=>$distinctYear,
+
+            'groupeTypes' => $carsByType,
+            'groupeColor' => $carsByColor,
+            'groupeModel' => $carsByModel,
+            'groupeYear' => $carsByYear,
             'available'=> $available,
-            'NotAvailable'=>$NotAvailable
+            'NotAvailable'=>$NotAvailable,
+
         ]);
     }
 
