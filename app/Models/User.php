@@ -23,7 +23,9 @@ class User extends Authenticatable
         'password',
         'address',
         'phone',
-        'photo'
+        'photo',
+        'city',
+        'country'
     ];
 
     /**
@@ -44,6 +46,10 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+    public function rentals()
+    {
+        return $this->hasMany(Rental::class);
+    }
     public function Reviews(){
         return $this->hasMany(Review::class);
 

@@ -48,6 +48,8 @@ class userController extends Controller
             "password" =>  Hash::make($request->password),
             "address" => $request->address,
             "phone" => $request->phone,
+            'city' => $request->city,
+            'country' => $request->country
 
 
         ]);
@@ -97,8 +99,22 @@ class userController extends Controller
     public function index()
     {
         $all = User::all();
+        $usersWithRentals = User::has('rentals')->get();
+        $usersWithoutRentals = User::doesntHave('rentals')->get();
+        $distictCity = User::distinct()->pluck('city');
+        $distictCountry = User::distinct()->pluck('country');
 
-        return response()->json($all);
+        $groupeCity=User::orderBy('city')->get()->groupBy('city');
+        $groupeCountry=User::orderBy('country')->get()->groupBy('country');
+        return response()->json([
+            'all' => $all,
+            'usersWithRentals' => $usersWithRentals,
+            'usersWithoutRentals' => $usersWithoutRentals,
+            'cityDistinct'=>$distictCity,
+            'countryDistinct'=>$distictCountry,
+            'groupeCity'=>$groupeCity,
+            'groupeCountry'=>$groupeCountry
+        ]);
     }
 
     /**
@@ -116,6 +132,8 @@ class userController extends Controller
             "address" => $request->input('address'),
             "phone" => $request->input('phone'),
             "photo" => $name,
+            'city' => $request->city,
+            'country' => $request->country
         ]);
         $User->save();
         return response()->json([
@@ -154,6 +172,8 @@ class userController extends Controller
         $User->address = $request->input('address');
         $User->phone = $request->input('phone');
         $User->photo = $request->input('photo');
+        $User->city = $request->input('city');
+        $User->country = $request->input('country');
 
         $User->update();
         $User->save();
