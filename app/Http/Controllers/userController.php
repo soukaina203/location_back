@@ -112,7 +112,7 @@ class userController extends Controller
         $User = new User([
             "name" => $request->input('name'),
             "email" => $request->input('email'),
-            "password" => $request->input('password'),
+            "password" =>  Hash::make($request->password),
             "address" => $request->input('address'),
             "phone" => $request->input('phone'),
             "photo" => $name,
@@ -129,10 +129,10 @@ class userController extends Controller
     public function show(string $id)
     {
         $User = User::findOrFail($id);
-        $rentals = Rental::where('user_id',$id)->with('car')->get();
+        $rentals = Rental::where('user_id', $id)->with('car')->get();
         return response()->json([
             'user' => $User,
-            'rentals'=>$rentals
+            'rentals' => $rentals
         ]);
     }
 

@@ -9,11 +9,10 @@ class rentalController extends Controller
 {
     public function index()
     {
-        $all = Rental::all();
+        $all = Rental::with('car', 'user')->get();
 
         return response()->json($all);
     }
-
     /**
      * Store a newly created resource in storage.
      */

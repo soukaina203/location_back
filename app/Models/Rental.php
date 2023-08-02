@@ -10,7 +10,7 @@ class Rental extends Model
     use HasFactory;
     protected $fillable = [
         'user_id', 'car_id', 'rental_start', 'rental_end',
-        'total_price', 'hourFinish','hourStart'
+        'total_price', 'hourFinish','hourStart','currency'
     ];
     public function user(){
         return $this->belongsTo(User::class);
