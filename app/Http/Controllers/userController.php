@@ -11,6 +11,34 @@ use Illuminate\Support\Facades\Hash;
 
 class userController extends Controller
 {
+
+
+
+
+    public function uploadImgs(Request $request, string $id)
+    {
+        $request->validate([
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
+        ]);
+        // return response()->json(['img'=> $request->file('image')]);
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $name = time() . '.' . $image->getClientOriginalExtension();
+            $image->move('images/', $name);
+            $car = User::findOrFail($id);
+            $car->photo = $name;
+            $car->update();
+            return ['image_url' => $name];
+        }
+
+        return response()->json(['message' => 'No image uploaded.'], 400);
+    }
+
+
+
+
+
+
     public function signup(Request $request)
     {
 
@@ -103,7 +131,7 @@ class userController extends Controller
         $User = User::findOrFail($id);
         $rentals = Rental::where('user_id',$id)->with('car')->get();
         return response()->json([
-            'User' => $User,
+            'user' => $User,
             'rentals'=>$rentals
         ]);
     }
