@@ -38,22 +38,16 @@ class rentalController extends Controller
      */
     public function show(string $id)
     {
-        $Rental = Rental::findOrFail($id);
+        $Rental = Rental::with('car', 'user')->findOrFail($id);
         return response()->json([
             'Rental' => $Rental
         ]);
     }
 
+
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
-    {
-        $Rental = Rental::findOrFail($id);
-        return response()->json([
-            'Rental' => $Rental
-        ]);
-    }
 
     /**
      * Update the specified resource in storage.
@@ -83,19 +77,13 @@ class rentalController extends Controller
     public function destroy(string $id)
     {
         $Rental = Rental::findOrFail($id);
-        $rental = Rental::where('client_id', $Rental->id)->get();
-        if ($rental->isEmpty()) {
 
             $Rental->delete();
             return response()->json([
                 'msg' => "done"
             ]);
-        } else {
 
-            return response()->json([
-                'msg' => "can't do this "
-            ]);
-        }
-        // }
+
+
     }
 }
