@@ -32,6 +32,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
     Route::get('/search/{key}', [carController::class, 'search']);
     Route::get('/car/{id}', [carController::class, 'show']);
+    Route::post('/review/create', [ReviewController::class, 'store']);
+    Route::get('/reviews', [ReviewController::class, 'index']);
 });
 Route::post('/logoutUser', [userController::class, 'logout'])->middleware('auth:sanctum');
 Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
@@ -51,7 +53,7 @@ Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
     Route::post('car/uploadImg/{id}', [carController::class, 'uploadImgs']);
     Route::post('user/uploadImg/{id}', [userController::class, 'uploadImgs']);
     Route::post('/logout', [userController::class, 'logout']);
-    Route::post('/pro/{id}', [rentalController::class, 'processedStatus']);
+    Route::post('/pro', [rentalController::class, 'processed']);
 });
 // for users
 

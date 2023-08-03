@@ -19,20 +19,25 @@ class rentalController extends Controller
 
         ]);
     }
-    public function processed(string $id){
-     $rental=Rental::findOrFail($id);
-     $rental->processed=1;
-     $rental->update();
+    public function processed(Request $request)
+    {
+        $array = $request->input('table');
+        foreach ($array as $item) {
+            $rental = Rental::findOrFail($item['id']); // Use square brackets to access the 'id' property
+            $rental->processed = 1;
+            $rental->update();
+        }
     }
+
 
     public function index()
     {
-        $notProcessed = Rental::with('car', 'user')->where('processed',0)->get();
-        $Processed = Rental::with('car', 'user')->where('processed',1)->get();
+        $notProcessed = Rental::with('car', 'user')->where('processed', 0)->get();
+        $Processed = Rental::with('car', 'user')->where('processed', 1)->get();
 
         return response()->json([
-            'np'=>$notProcessed,
-            'p'=>$Processed
+            'np' => $notProcessed,
+            'p' => $Processed
         ]);
     }
     /**
@@ -57,7 +62,7 @@ class rentalController extends Controller
 
     public function RentalsOfAUser(string $id)
     {
-        $Rental = Rental::with('car')->where('user_id',$id)->get();
+        $Rental = Rental::with('car')->where('user_id', $id)->get();
         return response()->json($Rental);
     }
     /**

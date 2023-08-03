@@ -13,7 +13,6 @@ class ReviewController extends Controller
     {
         $reviews = Review::with('user')->get();
 
-        // return view('reviews.index', compact('reviews'));
         return response()->json($reviews);
 
     }
@@ -31,7 +30,17 @@ class ReviewController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $Rental = new Review([
+            "user_id" => $request->input('user_id'),
+            "rating" => $request->input('rating'),
+            "comment" => $request->input('comment'),
+
+        ]);
+        $Rental->save();
+        return response()->json([
+            'message' => 'yes'
+        ]);
+
     }
 
     /**
@@ -39,7 +48,7 @@ class ReviewController extends Controller
      */
     public function show(string $id)
     {
-        //
+
     }
 
     /**
