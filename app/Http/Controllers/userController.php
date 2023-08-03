@@ -26,17 +26,15 @@ class userController extends Controller
             $name = time() . '.' . $image->getClientOriginalExtension();
             $image->move('images/', $name);
             $car = User::findOrFail($id);
-            $car->photo = $name;
-            $car->update();
-            return ['image_url' => $name];
+            if ($car !== null) {
+                $car->photo = $name;
+                $car->update();
+                return ['image_url' => $name];
+            }
         }
 
         return response()->json(['message' => 'No image uploaded.'], 400);
     }
-
-
-
-
 
 
     public function signup(Request $request)
@@ -78,13 +76,21 @@ class userController extends Controller
         // $request->validated($request->all());
 
         $user = User::where('email', $request->email)->first();
+
         if ($user && Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
+            if($user->isAdmin===1){
+                $n='a';
+            }else{
+                $n='u';
+            }
             return response()->json([
+
                 'token' => $token,
                 'status' => 'success',
                 'message' => 'Login successful',
-                'user' => $user
+                'user' => $user,
+                'isAdmin'=>$n
             ]);
         } else {
             return response()->json([
@@ -104,16 +110,16 @@ class userController extends Controller
         $distictCity = User::distinct()->pluck('city');
         $distictCountry = User::distinct()->pluck('country');
 
-        $groupeCity=User::orderBy('city')->get()->groupBy('city');
-        $groupeCountry=User::orderBy('country')->get()->groupBy('country');
+        $groupeCity = User::orderBy('city')->get()->groupBy('city');
+        $groupeCountry = User::orderBy('country')->get()->groupBy('country');
         return response()->json([
             'all' => $all,
             'usersWithRentals' => $usersWithRentals,
             'usersWithoutRentals' => $usersWithoutRentals,
-            'cityDistinct'=>$distictCity,
-            'countryDistinct'=>$distictCountry,
-            'groupeCity'=>$groupeCity,
-            'groupeCountry'=>$groupeCountry
+            'cityDistinct' => $distictCity,
+            'countryDistinct' => $distictCountry,
+            'groupeCity' => $groupeCity,
+            'groupeCountry' => $groupeCountry
         ]);
     }
 
@@ -131,7 +137,6 @@ class userController extends Controller
             "password" =>  Hash::make($request->password),
             "address" => $request->input('address'),
             "phone" => $request->input('phone'),
-            "photo" => $name,
             'city' => $request->city,
             'country' => $request->country
         ]);
@@ -168,10 +173,13 @@ class userController extends Controller
 
         $User->name = $request->input('name');
         $User->email = $request->input('email');
-        $User->password = $request->input('password');
+        if (Hash::check($request->password, $User->password)) {
+            $User->password = $request->password;
+        } else {
+            $User->password = Hash::make($request->password);
+        }
         $User->address = $request->input('address');
         $User->phone = $request->input('phone');
-        $User->photo = $request->input('photo');
         $User->city = $request->input('city');
         $User->country = $request->input('country');
 

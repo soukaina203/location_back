@@ -19,7 +19,7 @@ use App\Http\Controllers\ReviewController;
 */
 Route::post('/signUp', [userController::class, 'signup']);
 Route::post('/login', [userController::class, 'login']);
-Route::group(['middleware' => ['auth:sanctum']], function () {
+Route::group(['middleware' => ['auth:sanctum','isAdmin']], function () {
 
 
     Route::resources([
@@ -38,6 +38,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
 
 
 });
+Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::get('/carForUsers', [carController::class, 'CarsForUser']);
+
+});
+
+
 Route::get('topCars',[carController::class,'BestDeals']);
 Route::get('reviews/get',[ReviewController::class,'index']);
 

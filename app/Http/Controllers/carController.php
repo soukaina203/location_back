@@ -11,6 +11,12 @@ class carController extends Controller
     /**
      * Display a listing of the resource.
      */
+
+     public function CarsForUser(){
+        $topCars = Car::orderByDesc('nbrRentals')->limit(7)->get();
+        return response()->json($topCars);
+
+     }
     public function uploadImgs(Request $request, string $id)
     {
         $request->validate([
