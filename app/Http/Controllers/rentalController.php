@@ -19,11 +19,21 @@ class rentalController extends Controller
 
         ]);
     }
+    public function processed(string $id){
+     $rental=Rental::findOrFail($id);
+     $rental->processed=1;
+     $rental->update();
+    }
+
     public function index()
     {
-        $all = Rental::with('car', 'user')->get();
+        $notProcessed = Rental::with('car', 'user')->where('processed',0)->get();
+        $Processed = Rental::with('car', 'user')->where('processed',1)->get();
 
-        return response()->json($all);
+        return response()->json([
+            'np'=>$notProcessed,
+            'p'=>$Processed
+        ]);
     }
     /**
      * Store a newly created resource in storage.
