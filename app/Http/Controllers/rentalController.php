@@ -9,12 +9,13 @@ use App\Models\User;
 
 class rentalController extends Controller
 {
-    public function selecteData(){
-        $users=User::all();
-        $cars=Car::all();
+    public function selecteData()
+    {
+        $users = User::all();
+        $cars = Car::all();
         return response()->json([
-            'users'=>$users,
-            'cars'=>$cars
+            'users' => $users,
+            'cars' => $cars
 
         ]);
     }
@@ -44,26 +45,32 @@ class rentalController extends Controller
         ]);
     }
 
+    public function RentalsOfAUser(string $id)
+    {
+        $Rental = Rental::with('car')->where('user_id',$id)->get();
+        return response()->json($Rental);
+    }
     /**
      * Display the specified resource.
      */
     public function show(string $id)
     {
         $Rental = Rental::with('car', 'user')->findOrFail($id);
-        $users=User::all();
-        $cars=Car::all();
+        $users = User::all();
+        $cars = Car::all();
         return response()->json([
             'Rental' => $Rental,
-            'Users'=>$users,
-            'Cars'=>$cars
+            'Users' => $users,
+            'Cars' => $cars
 
         ]);
     }
 
- public function NotProcessed(){
-    $rentals=Rental::where('processed',0)->get();
-    return response()->json($rentals);
- }
+    public function NotProcessed()
+    {
+        $rentals = Rental::where('processed', 0)->get();
+        return response()->json($rentals);
+    }
     /**
      * Show the form for editing the specified resource.
      */
@@ -97,12 +104,9 @@ class rentalController extends Controller
     {
         $Rental = Rental::findOrFail($id);
 
-            $Rental->delete();
-            return response()->json([
-                'msg' => "done"
-            ]);
-
-
-
+        $Rental->delete();
+        return response()->json([
+            'msg' => "done"
+        ]);
     }
 }

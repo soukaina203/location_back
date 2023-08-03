@@ -22,12 +22,16 @@ Route::post('/signUp', [userController::class, 'signup']);
 Route::post('/login', [userController::class, 'login']);
 
 Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::post('/rentals', [rentalController::class, 'store']);
+
+
+    Route::get('/rentals/{id}', [rentalController::class, 'RentalsOfAUser']);
+
     Route::get('/carForUsers', [carController::class, 'CarsForUser']);
     Route::get('/select', [rentalController::class, 'selecteData']);
 
     Route::get('/search/{key}', [carController::class, 'search']);
     Route::get('/car/{id}', [carController::class, 'show']);
-    Route::post('/rental', [rentalController::class, 'store']);
     Route::post('/logout', [userController::class, 'logout']);
 });
 Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
