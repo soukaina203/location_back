@@ -60,7 +60,10 @@ class rentalController extends Controller
         ]);
     }
 
-
+ public function NotProcessed(){
+    $rentals=Rental::where('processed',0)->get();
+    return response()->json($rentals);
+ }
     /**
      * Show the form for editing the specified resource.
      */
