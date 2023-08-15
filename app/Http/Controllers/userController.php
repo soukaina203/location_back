@@ -73,32 +73,29 @@ class userController extends Controller
     }
     public function login(Request $request)
     {
-        // $request->validated($request->all());
-
         $user = User::where('email', $request->email)->first();
 
         if ($user && Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
-            if($user->isAdmin===1){
-                $n='a';
-            }else{
-                $n='u';
-            }
-            return response()->json([
 
+            $isAdmin = $user->isAdmin === 1 ? 'a' : 'u';
+
+            return response()->json([
                 'token' => $token,
                 'status' => 'success',
                 'message' => 'Login successful',
                 'user' => $user,
-                'isAdmin'=>$n
+                'isAdmin' => $isAdmin
             ]);
         } else {
             return response()->json([
-                'status' => $user,
-
-            ]);
+                'status' => 'error',
+                'message' => 'Invalid credentials',
+            ], 401);
         }
     }
+
+
     /**
      * Display a listing of the resource.
      */

@@ -6,6 +6,7 @@ use App\Http\Controllers\rentalController;
 use App\Http\Controllers\userController;
 use App\Http\Controllers\carController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\productController;
 
 /*
 |--------------------------------------------------------------------------
@@ -57,7 +58,8 @@ Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
 });
 // for users
 
-
+Route::resource('products',productController::class);
 
 Route::get('topCars', [carController::class, 'BestDeals']);
 Route::get('reviews/get', [ReviewController::class, 'index']);
+Route::get('reviews/custom', [ReviewController::class, 'custom']);

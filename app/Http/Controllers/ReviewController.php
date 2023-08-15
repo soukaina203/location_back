@@ -9,6 +9,11 @@ class ReviewController extends Controller
     /**
      * Display a listing of the resource.
      */
+    public function custom(){
+        $reviews = Review::with('user')->limit(3)->get();
+
+        return response()->json($reviews);
+    }
     public function index()
     {
         $reviews = Review::with('user')->get();
