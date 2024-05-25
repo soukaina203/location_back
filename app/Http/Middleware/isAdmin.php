@@ -15,7 +15,7 @@ class isAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (auth()->user()->isAdmin == 1) {
+        if (auth()->user()->role == 1) {
             return $next($request);
         }
         abort(403, 'Unauthorized Access');

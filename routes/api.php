@@ -8,16 +8,7 @@ use App\Http\Controllers\carController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\productController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
+
 
 Route::post('/signUp', [userController::class, 'signup']);
 Route::post('/login', [userController::class, 'login']);

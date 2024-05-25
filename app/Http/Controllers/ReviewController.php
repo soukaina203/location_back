@@ -77,6 +77,11 @@ class ReviewController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $Review = Review::findOrFail($id);
+
+        $Review->delete();
+        return response()->json([
+            'msg' => "done"
+        ]);
     }
 }
