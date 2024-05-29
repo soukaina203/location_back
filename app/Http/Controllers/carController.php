@@ -183,20 +183,15 @@ class carController extends Controller
     public function destroy(string $id)
     {
         $car = Car::findOrFail($id);
-        $rental = Rental::where('car_id', $car->id)->get();
-        if ($rental->isEmpty()) {
-
+        $rentals = Rental::where('car_id', $car->id)->get();
+        for ($i = 0; $i < count($rentals); $i++) {
+            $rentals[$i]->delete();
+        }
             $car->delete();
             return response()->json([
                 'msg' => "done"
             ]);
-        } else {
 
-            return response()->json([
-                'msg' => "can't do this "
-            ]);
-        }
-        // }
     }
     public function BestDeals()
     {

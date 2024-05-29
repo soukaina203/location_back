@@ -193,22 +193,19 @@ class userController extends Controller
     public function destroy(string $id)
     {
         $User = User::findOrFail($id);
-        $rental = Rental::where('user_id', $User->id)->get();
-        if ($rental->isEmpty()) {
-            $reviews = Review::where('user_id', $id)->get();
-            for ($i = 0; $i < count($reviews); $i++) {
-                $reviews[$i]->delete();
-            }
-            $User->delete();
-            return response()->json([
-                'msg' => "done"
-            ]);
-        } else {
-
-            return response()->json([
-                'msg' => "can't do this "
-            ]);
+        $rentals = Rental::where('user_id', $User->id)->get();
+        for ($i = 0; $i < count($rentals); $i++) {
+            $rentals[$i]->delete();
         }
+        $reviews = Review::where('user_id', $id)->get();
+        for ($i = 0; $i < count($reviews); $i++) {
+            $reviews[$i]->delete();
+        }
+        $User->delete();
+        return response()->json([
+            'msg' => "done"
+        ]);
+
         // }
     }
 }
