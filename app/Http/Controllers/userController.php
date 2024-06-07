@@ -78,7 +78,7 @@ class userController extends Controller
         if ($user && Hash::check($request->password, $user->password)) {
             $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
 
-            $isAdmin = $user->isAdmin === 1 ? 'a' : 'u';
+            $isAdmin = $user->role === 1 ? 'a' : 'u';
 
             return response()->json([
                 'token' => $token,
