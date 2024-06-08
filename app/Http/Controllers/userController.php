@@ -90,8 +90,7 @@ class userController extends Controller
         } else {
             return response()->json([
                 'status' => 'error',
-                'message' => 'Invalid credentials',
-            ], 401);
+            ]);
         }
     }
 
