@@ -51,8 +51,10 @@ class ReviewController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function userReviews(string $userId)
     {
+        $reviews = Review::where('user_id', $userId)->with('user')->get();
+        return response()->json($reviews);
 
     }
 

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Models\Rental;
 use App\Models\Review;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 
 class userController extends Controller
@@ -74,12 +75,13 @@ class userController extends Controller
     public function login(Request $request)
     {
         $user = User::where('email', $request->email)->first();
+        $credentials=['email'=>$request->email,'password'=>$request->password];
+        $result=Auth::attempt($credentials);
 
-        if ($user && Hash::check($request->password, $user->password)) {
+        if ($user && $result==true) {
             $token = $user->createToken('Api Token of ' . $user->name)->plainTextToken;
 
             $isAdmin = $user->role === 1 ? 'a' : 'u';
-
             return response()->json([
                 'token' => $token,
                 'status' => 'success',
@@ -89,7 +91,8 @@ class userController extends Controller
             ]);
         } else {
             return response()->json([
-                'status' => 'error',
+                'status' => $request->password,
+                'status2' => $result,
             ]);
         }
     }

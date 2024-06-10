@@ -29,6 +29,8 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::get('/car/{id}', [carController::class, 'show']);
     Route::post('/review/create', [ReviewController::class, 'store']);
     Route::get('/reviews', [ReviewController::class, 'index']);
+    Route::get('/review/user/{userId}', [ReviewController::class, 'userReviews']);
+
 });
 Route::post('/logoutUser', [userController::class, 'logout'])->middleware('auth:sanctum');
 Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
