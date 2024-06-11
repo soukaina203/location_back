@@ -86,4 +86,11 @@ class ReviewController extends Controller
             'msg' => "done"
         ]);
     }
+    public function search($key){
+        $an = Review::where(function ($query) use ($key) {
+            $query->where('comment', 'like', '%' . $key . '%')
+                  ->orWhere('rating', 'like', '%' . $key . '%');
+        })->with('user')->get();
+        return response()->json($an);
+    }
 }

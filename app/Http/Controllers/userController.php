@@ -210,4 +210,12 @@ class userController extends Controller
 
         // }
     }
+    public function search($key){
+        $an = User::where(function ($query) use ($key) {
+            $query->where('name', 'like', '%' . $key . '%')
+                  ->orWhere('email', 'like', '%' . $key . '%');
+        })->get();
+        return response()->json($an);
+    }
+
 }

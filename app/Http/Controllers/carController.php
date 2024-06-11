@@ -43,6 +43,24 @@ class carController extends Controller
         ]);
 
      }
+
+     public function uploadCars(Request $request)
+     {
+         $request->validate([
+             'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
+         ]);
+         // return response()->json(['img'=> $request->file('image')]);
+         if ($request->hasFile('image')) {
+             $image = $request->file('image');
+             $name = time() . '.' . $image->getClientOriginalExtension();
+             $image->move('images/', $name);
+
+             return ['image_url' => $name];
+         }
+
+         return response()->json(['message' => 'No image uploaded.'], 400);
+     }
+
     public function uploadImgs(Request $request, string $id)
     {
         $request->validate([
@@ -61,19 +79,18 @@ class carController extends Controller
 
         return response()->json(['message' => 'No image uploaded.'], 400);
     }
+
+
     public function store(Request $request)
     {
-        $request->validate([
-            'photo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Allow jpeg, png, jpg, gif images up to 2MB
-        ]);
-        if ($request->hasFile('photo')) {
-            $image = $request->file('photo');
-            $name = time() . '.' . $image->getClientOriginalExtension();
-            $image->move('images/', $name);
+
+            // $image = $request->file('photo');
+            // $name = time() . '.' . $image->getClientOriginalExtension();
+            // $image->move('images/', $name);
             $car = new Car([
                 "model" => $request->input('model'),
                 "make" => $request->input('make'),
-                'photo' => $name,
+                'photo' => $request->input('photo'),
                 "year" => $request->input('year'),
                 "color" => $request->input('color'),
                 "price_per_day" => $request->input('price_per_day'),
@@ -83,9 +100,7 @@ class carController extends Controller
             return response()->json([
                 'message' => 'Item added successfully'
             ]);
-        }else{
-            return "bad ";
-        }
+
     }
     public function index()
     {
@@ -202,10 +217,10 @@ class carController extends Controller
     }
     public function search($key){
         $an = Car::where(function ($query) use ($key) {
-            $query->where('model', $key)
-                  ->orWhere('make', $key);
+            $query->where('model', 'like', '%' . $key . '%')
+                  ->orWhere('make', 'like', '%' . $key . '%');
         })->get();
         return response()->json($an);
-
     }
+
 }

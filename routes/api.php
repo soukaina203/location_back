@@ -26,9 +26,12 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::post('user/uploadImg/{id}', [userController::class, 'uploadImgs']);
 
     Route::get('/search/{key}', [carController::class, 'search']);
+    Route::get('/search/user/{key}', [userController::class, 'search']);
+    Route::get('/search/review/{key}', [ReviewController::class, 'search']);
     Route::get('/car/{id}', [carController::class, 'show']);
     Route::post('/review/create', [ReviewController::class, 'store']);
     Route::get('/reviews', [ReviewController::class, 'index']);
+    Route::resource('/review', ReviewController::class);
     Route::get('/review/user/{userId}', [ReviewController::class, 'userReviews']);
 
 });
@@ -40,7 +43,6 @@ Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
         'rental' => rentalController::class,
         'user' => userController::class,
         'car' => carController::class,
-        'review' => ReviewController::class,
 
     ]);
     // Route::get('/select',[rentalController::class,'selecteData']);
@@ -48,6 +50,7 @@ Route::group(['middleware' => ['auth:sanctum', 'isAdmin']], function () {
     Route::get('notProcessed', [rentalController::class, 'NotProcessed']);
     Route::get('carsForAdmin', [carController::class, 'carsForAdmin']);
     Route::post('car/uploadImg/{id}', [carController::class, 'uploadImgs']);
+    Route::post('car/uploadImg', [carController::class, 'uploadCars']);
     // Route::post('user/uploadImg/{id}', [userController::class, 'uploadImgs']);
     Route::post('/logout', [userController::class, 'logout']);
     Route::post('/pro', [rentalController::class, 'processed']);
