@@ -40,25 +40,32 @@ class userController extends Controller
 
     public function signup(Request $request)
     {
+        // Check if a user with the given email already exists
+        $userExist = User::where('email', $request->email)->exists();
 
-        $user = new User([
-            "name" => $request->name,
-            "email" => $request->email,
-            "password" =>  Hash::make($request->password),
-            "address" => $request->address,
-            "phone" => $request->phone,
-            'city' => $request->city,
-            'country' => $request->country
-
-
-        ]);
-        $user->save();
-        return response()->json([
-            'msg' => "great"
-
-
-        ]);
+        if (!$userExist) {
+            // If the user does not exist, create a new user
+            $user = new User([
+                "name" => $request->name,
+                "email" => $request->email,
+                "password" => Hash::make($request->password),
+                "address" => $request->address,
+                "phone" => $request->phone,
+                'city' => $request->city,
+                'country' => $request->country
+            ]);
+            $user->save();
+            return response()->json([
+                'success' => true,
+                'message' => 'User registered successfully'
+            ], 201);
+        } else {
+            // If the user exists, return a response indicating so
+            return -1;
+        }
     }
+
+
     public function logout()
     {
         try {
@@ -90,10 +97,7 @@ class userController extends Controller
                 'isAdmin' => $isAdmin
             ]);
         } else {
-            return response()->json([
-                'status' => $request->password,
-                'status2' => $result,
-            ]);
+            return -1;
         }
     }
 
